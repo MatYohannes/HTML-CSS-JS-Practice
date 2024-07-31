@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        .form-container {
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+        .success {
+            color: blue;
+            margin-top: 10px;
+            font-size: 1.5em;
+        }
+        .word-count {
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button-container input {
+            margin-right: 10px;
+        }
+        .error-summary {
+            color: red;
+            background-color: #ffe6e6;
+            padding: 10px;
+            border: 1px solid #ffcccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .background-error {
+            background-color: #ff5361;
+        }
+    </style>
+    <script>
+        function checkUsername() {
+            var username = document.getElementById("username").value.trim();
+            for (var i = 0; i < username.length; i++) {
+                var charNum = username.charCodeAt(i);
+                if (charNum < 97 || charNum > 122) { // Check for lowercase letters
+                    return "Username must be only lowercase letters.";
+                }
+            }
+            return "";
+        }
+
+        function checkPassword() {
+            var password = document.getElementById("password").value.trim();
+            var hasUpperCase = false;
+            var hasLowerCase = false;
+            var hasNumber = false;
+
+            for (var i = 0; i < password.length; i++) {
+                var charNum = password.charCodeAt(i);
+                if (charNum >= 65 && charNum <= 90) { // Check if there is an uppercase
+                    hasUpperCase = true;
+                } else if (charNum >= 97 && charNum <= 122) { // Check if there is a lowercase
+                    hasLowerCase = true;
+                } else if (charNum >= 48 && charNum <= 57) { // Check if there is a number
+                    hasNumber = true;
+                }
+            }
+
+            if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+                return "Password must contain at least one uppercase letter, one lowercase letter, and one number.";
+            }
+            return "";
+        }
+
+        function checkStudentID() {
+            var studentId = document.getElementById("studentid").value.trim();
+
+            if (studentId.length !== 9) {
+                return "Student ID must be exactly 9 digits long.";
+            }
+
+            for (var i = 0; i < studentId.length; i++) {
+                var charNum = studentId.charCodeAt(i);
+                if (charNum < 48 || charNum > 57) { // Check for only digits
+                    return "Student ID must contain only digits.";
+                }
+            }
+            return "";
+        }
+
+        function checkYear() {
+            var year = document.getElementById("year").value.trim();
+            var cleanedYear = year.replace(/\D/g, ''); // Remove non-digit characters
+
+            if (cleanedYear === '') {
+                return "Year must contain only digits.";
+            }
+
+            var currentYear = new Date().getFullYear();
+            var yearNumber = parseInt(cleanedYear, 10);
+
+            if (cleanedYear.length === 2) {
+                yearNumber += 2000;
+            } else if (cleanedYear.length !== 4) {
+                return "Year must be in 2-digit or 4-digit format.";
+            }
+
+            if (yearNumber > currentYear) {
+                return "Year must not be in the future.";
+            }
+
+            return "";
+        }
+
+        function checkSemester() {
+            var semester = document.getElementById("semester").value.trim().toUpperCase();
+            var validSemesters = ["FALL", "SPRING", "SUMMER"];
+            if (!validSemesters.includes(semester)) {
+                return "Start semester must be 'FALL', 'SPRING', or 'SUMMER'. Remember to capitalize.";
+            }
+            return "";
+        }
+
+        function validateForm() {
+            var usernameError = checkUsername();
+            var passwordError = checkPassword();
+            var studentIdError = checkStudentID();
+            var semesterError = checkSemester();
+            var yearError = checkYear();
+            var isValid = true;
+
+            var errorSummary = [];
+
+            // Clear previous errors
+            document.getElementById("usernameError").textContent = '';
+            document.getElementById("passwordError").textContent = '';
+            document.getElementById("studentidError").textContent = '';
+            document.getElementById("semesterError").textContent = '';
+            document.getElementById("yearError").textContent = '';
+            document.getElementById("success").textContent = '';
+            document.getElementById("errorSummary").textContent = '';
+
+            // Collect errors
+            if (usernameError) {
+                document.getElementById("usernameError").textContent = usernameError;
+                errorSummary.push(usernameError);
+                isValid = false;
+            }
+            if (passwordError) {
+                document.getElementById("passwordError").textContent = passwordError;
+                errorSummary.push(passwordError);
+                isValid = false;
+            }
+            if (studentIdError) {
+                document.getElementById("studentidError").textContent = studentIdError;
+                errorSummary.push(studentIdError);
+                isValid = false;
+            }
+            if (semesterError) {
+                document.getElementById("semesterError").textContent = semesterError;
+                errorSummary.push(semesterError);
+                isValid = false;
+            }
+            if (yearError) {
+                document.getElementById("yearError").textContent = yearError;
+                errorSummary.push(yearError);
+                isValid = false;
+            }
+
+            // Display error summary if invalid
+            if (!isValid) {
+                document.getElementById("errorSummary").textContent = errorSummary.join(' ');
+                document.body.classList.add('background-error');
+            } else {
+                document.body.classList.remove('background-error');
+            }
+
+            return isValid;
+        }
+
+        function handleSubmit(event) {
+            if (validateForm()) {
+                document.getElementById("success").textContent = "SUCCESS"; // Show success message
+            } else {
+                document.getElementById("success").textContent = ""; // Clear success message if not valid
+            }
+        }
+
+        function handleClear() {
+            document.getElementById("registrationform").reset();
+            document.getElementById("messages").disabled = false; // Open messageBox back up
+            document.getElementById("wordCountLabel").textContent = "25 words remaining"; // Reset word count label
+            document.getElementById("success").textContent = ""; // Clear success message
+            document.getElementById("errorSummary").textContent = ''; // Clear error summary
+            document.body.classList.remove('background-error'); // Remove error background
+        }
+
+        function init() {
+            var form = document.getElementById("registrationform");
+            document.querySelector('input[value="Submit"]').addEventListener("click", handleSubmit);
+
+            var messagesTextarea = document.getElementById("messages");
+            var wordCountLabel = document.getElementById("wordCountLabel");
+            var maxWords = 25;
+
+            function updateWordCount() {
+                var text = messagesTextarea.value.trim();
+                var words = text.split(" ").filter(function(word) {
+                    return word.length > 0; // Filter out empty words
+                });
+                var wordCount = words.length;
+
+                if (wordCount > maxWords) {
+                    words = words.slice(0, maxWords); // Trim to maxWords
+                    messagesTextarea.value = words.join(" ");
+                    wordCount = maxWords;
+                }
+
+                wordCountLabel.textContent = (maxWords - wordCount) + " words remaining"; // compute word change
+                messagesTextarea.disabled = wordCount >= maxWords;
+            }
+
+            messagesTextarea.addEventListener("input", updateWordCount);
+            updateWordCount(); // Initialize word count on page load
+
+            // Attach the clear button handler
+            document.getElementById("clearButton").addEventListener("click", handleClear);
+        }
+
+        window.addEventListener("load", init);
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Registration Form</h2>
+        <div id="errorSummary" class="error-summary" style="display: none;"></div>
+        <form id="registrationform">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <div id="usernameError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <div id="passwordError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="studentid">Student ID number:</label>
+                <input type="text" id="studentid" name="studentid" required>
+                <div id="studentidError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="semester">Start Semester:</label>
+                <input type="text" id="semester" name="semester" required>
+                <div id="semesterError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="year">Start Year:</label>
+                <input type="text" id="year" name="year" required>
+                <div id="yearError" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="messages">Messages:</label>
+                <textarea id="messages" name="messages"></textarea>
+                <div id="wordCountLabel" class="word-count">25 words remaining</div>
+            </div>
+            <div class="button-container">
+                <input type="button" value="Submit">
+                <input type="button" id="clearButton" value="Clear">
+            </div>
+            <div id="success" class="success"></div>
+        </form>
+    </div>
+</body>
+</html>
