@@ -1,0 +1,96 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+.container {
+    border: 2px solid red;
+    padding: 20px;
+    text-align: center;
+}
+.container img {
+    max-width: 100px; 
+    height: auto;
+}
+table {
+    border-collapse: collapse;
+    width: 80%; 
+    margin-top: 20px; 
+}
+td {
+    border: none; 
+    padding: 20px; 
+    text-align: center;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px; 
+    margin: auto; 
+}
+
+label {
+    margin-bottom: 5px; 
+}
+
+input[type="text"] {
+    padding: 5px;
+    font-size: 14px; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 10px; 
+    padding: 8px 12px;
+    font-size: 14px; 
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="reset"] {
+    background-color: #dc3545; 
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    border: 2px solid blue;
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: blue;
+    border: 2px solid blue;
+    list-style: none;
+    padding: 0;
+    width: 200px; 
+    margin-top: 10px;
+}
+.dropdown-menu li {
+    background-color: blue;
+    border: 2px solid blue;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+.dropdown-menu li:hover {
+    background-color: yellow;
+    color: black;
+}
