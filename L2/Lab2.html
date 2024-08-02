@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form</title>
+    <meta name="author" content="Mathewos Yohannes">
+    <meta name="description" content="A registration form project with form validation and error handling.">
+    <meta name="keywords" content="registration, form, validation, project">
+    <meta name="language" content="English">
+    <meta name="assignment" content="CS 484">
+    <meta name="University" content="California State University Northridge">
+    <meta name="Professor" content="Adam Kaplan">
+
     <style>
         .form-container {
             max-width: 350px;
@@ -60,6 +68,11 @@
     <script>
         function checkUsername() {
             var username = document.getElementById("username").value.trim();
+
+            if (username === "") {
+                return "Please insert username.";
+            }
+
             for (var i = 0; i < username.length; i++) {
                 var charNum = username.charCodeAt(i);
                 if (charNum < 97 || charNum > 122) { // Check for lowercase letters
@@ -110,36 +123,76 @@
 
         function checkYear() {
             var year = document.getElementById("year").value.trim();
-            var cleanedYear = year.replace(/\D/g, ''); // Remove non-digit characters
+            var semester = document.getElementById("semester").value.trim().toUpperCase();
+            var cleanedYear = "";
 
+            // Clean up the year input to ensure it's only digits
+            for (var i = 0; i < year.length; i++) {
+                var charNum = year.charCodeAt(i);
+                if (charNum >= 48 && charNum <= 57) {
+                    cleanedYear += year[i];
+                }
+            }
+
+            // Check if cleanedYear is empty or invalid
             if (cleanedYear === '') {
                 return "Year must contain only digits.";
             }
 
             var currentYear = new Date().getFullYear();
+            var currentMonth = new Date().getMonth(); // 
             var yearNumber = parseInt(cleanedYear, 10);
+            var semesterStartMonth;
 
+            // Convert 2-digit year to 4-digit year
             if (cleanedYear.length === 2) {
                 yearNumber += 2000;
             } else if (cleanedYear.length !== 4) {
                 return "Year must be in 2-digit or 4-digit format.";
             }
 
+            // Define the starting month for each semester
+            if (semester === 'SPRING') {
+                semesterStartMonth = -1; // setting to month before spring semester
+            } else if (semester === 'SUMMER') {
+                semesterStartMonth = 4; // setting to month before summer semester
+            } else if (semester === 'FALL') {
+                semesterStartMonth = 7; // setting to month before fall semester
+            } 
+
+            // Check if the year is in the future
             if (yearNumber > currentYear) {
-                return "Year must not be in the future.";
+                return "Year can not be in the future.";
+            }
+
+            // Check if the semester is in the future
+            if (yearNumber === currentYear && currentMonth < semesterStartMonth) {
+                return "Semester must not be in the future.";
             }
 
             return "";
         }
 
         function checkSemester() {
-            var semester = document.getElementById("semester").value.trim().toUpperCase();
+            var semester = document.getElementById("semester").value.trim();
+            
+            
+            for (var i = 0; i < semester.length; i++) {
+                var charNum = semester.charCodeAt(i);
+                if (charNum >= 97 && charNum <= 122) { // Check for lowercase letters
+                    return "Semester must be only uppercase letters.";
+                }
+            }
+
+            // Check if the semester is valid
             var validSemesters = ["FALL", "SPRING", "SUMMER"];
             if (!validSemesters.includes(semester)) {
                 return "Start semester must be 'FALL', 'SPRING', or 'SUMMER'. Remember to capitalize.";
             }
-            return "";
+            
+            return ""; 
         }
+
 
         function validateForm() {
             var usernameError = checkUsername();
@@ -151,7 +204,6 @@
 
             var errorSummary = [];
 
-            // Clear previous errors
             document.getElementById("usernameError").textContent = '';
             document.getElementById("passwordError").textContent = '';
             document.getElementById("studentidError").textContent = '';
@@ -159,6 +211,7 @@
             document.getElementById("yearError").textContent = '';
             document.getElementById("success").textContent = '';
             document.getElementById("errorSummary").textContent = '';
+            
 
             // Collect errors
             if (usernameError) {
@@ -208,10 +261,15 @@
 
         function handleClear() {
             document.getElementById("registrationform").reset();
-            document.getElementById("messages").disabled = false; // Open messageBox back up
+            document.getElementById("messages").disabled = false; // Enable the message textarea
             document.getElementById("wordCountLabel").textContent = "25 words remaining"; // Reset word count label
             document.getElementById("success").textContent = ""; // Clear success message
             document.getElementById("errorSummary").textContent = ''; // Clear error summary
+            document.getElementById("usernameError").textContent = '';
+            document.getElementById("passwordError").textContent = '';
+            document.getElementById("studentidError").textContent = '';
+            document.getElementById("semesterError").textContent = '';
+            document.getElementById("yearError").textContent = '';
             document.body.classList.remove('background-error'); // Remove error background
         }
 
@@ -231,12 +289,12 @@
                 var wordCount = words.length;
 
                 if (wordCount > maxWords) {
-                    words = words.slice(0, maxWords); // Trim to maxWords
+                    words = words.slice(0, maxWords); 
                     messagesTextarea.value = words.join(" ");
                     wordCount = maxWords;
                 }
 
-                wordCountLabel.textContent = (maxWords - wordCount) + " words remaining"; // compute word change
+                wordCountLabel.textContent = (maxWords - wordCount) + " words remaining"; 
                 messagesTextarea.disabled = wordCount >= maxWords;
             }
 
